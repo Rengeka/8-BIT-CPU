@@ -1,13 +1,13 @@
 `timescale 1ns/1ps
 
-module full_adder_tb;
+module alu_tb;
     reg  [7:0] a, b;
     reg  [3:0] opcode;
     reg        cin;
     wire [7:0] result;
     wire       zero, carry, overflow, negative;
 
-    full_adder uut (
+    alu uut (
         .a(a),
         .b(b),
         .opcode(opcode),
@@ -21,7 +21,7 @@ module full_adder_tb;
 
     initial begin
         $dumpfile("wave.vcd");
-        $dumpvars(0, full_adder_tb);
+        $dumpvars(0, alu_tb);
     end
 
     initial begin

@@ -1,4 +1,4 @@
-module full_adder(
+module alu(
     input  [7:0] a, b,
     input  [3:0] opcode,
     input        cin,
