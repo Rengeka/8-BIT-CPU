@@ -1,0 +1,54 @@
+`timescale 1ns/1ps
+
+/*======================================================
+  Full-Adder Truth Table
+  -----------------------------------------------------
+   a  b  cin | sum cout
+  -----------------------------------------------------
+   0  0   0  |  0    0
+   0  1   0  |  1    0
+   1  0   0  |  1    0
+   1  1   0  |  0    1
+   0  0   1  |  1    0
+   0  1   1  |  0    1
+   1  0   1  |  0    1
+   1  1   1  |  1    1
+  -----------------------------------------------------
+   sum  = a ^ b ^ cin
+   cout = (a & b) | (cin & (a ^ b))
+======================================================*/
+
+module full_adder_tb;
+    reg a, b, cin;
+    wire sum, cout;
+
+    full_adder u_add (
+        .a(a), 
+        .b(b), 
+        .cin(cin), 
+        .sum(sum), 
+        .cout(cout)
+    );
+
+    initial begin
+        $dumpfile("wave.vcd");
+        $dumpvars(0, full_adder_tb);
+    end
+
+    initial begin
+        $monitor("t=%0dns a=%b b=%b cin=%b -> sum=%b cout=%b",
+                  $time, a, b, cin, sum, cout);
+    end
+
+    initial begin
+        a = 0; b = 0; cin = 0;
+        #10 a = 0; b = 1; cin = 0;
+        #10 a = 1; b = 0; cin = 0;
+        #10 a = 1; b = 1; cin = 0;
+        #10 a = 0; b = 0; cin = 1;
+        #10 a = 0; b = 1; cin = 1;
+        #10 a = 1; b = 0; cin = 1;
+        #10 a = 1; b = 1; cin = 1;
+        #10 $finish;
+    end
+endmodule
