@@ -1,5 +1,7 @@
 #!/bin/bash
 
+clear
+
 echo "Compiling..."
 nasm -f elf64 src/main.asm -o main.o
 if [ $? -ne 0 ]; then

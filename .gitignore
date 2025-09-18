@@ -13,6 +13,11 @@
 *.lst
 *.map
 
+# verilog and vhdl files
+*.out
+*.vvp
+*.vcd
+
 # CMake files
 CMakeCache.txt
 CMakeFiles/

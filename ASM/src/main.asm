@@ -1,76 +1,57 @@
 section .data
 
-fileName db "../main.bin", 0
-msg db "File opened", 10  
-len equ $ - msg
+fileName db "main.bin", 0
+
+msg_file_opened db "File was opened", 10  
+len_file_opened equ $ - msg_file_opened
+
+msg_file_read db "File was read", 10  
+len_file_read equ $ - msg_file_read
+
+section .bss
+
+buffer resb 100 
 
 section .text
 
-; syscall rules (Move to .md)
-; syscall number rax
-; 1   rdi 
-; 2   rsi
-; 3   rdx
-; 4   r10
-; 5   r8
-; 6   r9
-
-; Caller-saved (volatile)
-; rax, rdi, rsi, rdx, r10, r8, r9, rcx, r11
-
-; Callee-saved (non-volatile)
-; rbx, rbp, r12, r13, r14, r15
-
-; system V AMD64 ABI.
-; 1   rdi
-; 2	rsi
-; 3	rdx
-; 4	rcx
-; 5	r8
-; 6	r9
-; 7.. stack
-
-%macro SYSCALL 7
-
-    mov rax, %1
-    mov rdi, %2
-    mov rsi, %3     ;   lea rsi, [rel fileName]
-    mov rdx, %4
-    mov r10, %5
-    mov r8, %6
-    mov r9, %7
-
-    syscall
-
-%endmacro
-
-; openat(AT_FDCWD, path, O_RDONLY)
-openat:
-    SYSCALL 257, rdi, rsi, 0, 0, 0, 0
+check_error:
+    cmp rax, 0
+    jge .ok
+    neg rax         
+    mov rdi, rax     
+    jmp _error
+.ok:
     ret
 
-%macro OPEN_FILE 2
-    mov rdi, %2         ; fdcwd
-    lea rsi, [rel %1]   ; path
-    call openat
-%endmacro
-
-%define open_file(path) OPEN_FILE path, -100
-;%define open_file(path, fdcwd) OPEN_FILE path, fdcwd
+%include "src/lib.asm"
 
 global _start
 
 _start:
 
-    open_file(fileName)   
+    open_file(fileName)  
+    call check_error
 
-    ; вывести "File opened\n" на stdout
-    mov rdi, 1         ; stdout
-    lea rsi, [rel msg]
-    mov rdx, len
-    mov rax, 1         ; syscall write
+    push rax
+    print_string(msg_file_opened, len_file_opened)
+    pop rax
+
+    read_file(rax, buffer, 20)
+    call check_error
+
+    push rax
+    print_string(msg_file_read, len_file_read)
+    pop rdx
+
+    print_string(buffer, rdx)
+
+    call _exit
+
+_error:
+    mov rax, 60   ; waits error code in rdi      
     syscall
 
-    mov rax, 60    
-    xor rdi, rdi
+_exit:
+    mov rax, 60     
+    xor rdi, rdi   
     syscall

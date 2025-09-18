@@ -48,9 +48,15 @@ openat:
     ret
 
 %macro OPEN_FILE 2
+    push rdi
+    push rsi
+
     mov rdi, %2         ; fdcwd
     lea rsi, [rel %1]   ; path
     call openat
+
+    pop rsi
+    pop rdi
 %endmacro
 
 ;%define open_file(path) OPEN_FILE path, -100
