@@ -6,8 +6,14 @@ module full_adder(
 
     // Flags
     output zero, carry, overflow, negative
+    /* 
+       overflow is a flag that indicates signed arithmetic overflow.
+       It becomes 1 when the result of adding two signed 8-bit numbers
+       cannot be represented in 8 bits. This happens when:
+       - adding two positive numbers gives a negative result, or
+       - adding two negative numbers gives a positive result.
+    */
 );
-
     // Initilize
     
     wire [7:0] sum_res;
@@ -77,16 +83,8 @@ module full_adder(
         endcase
     end
 
-
     assign result   = result_reg;
     assign carry    = carry_reg;
-    /* 
-       overflow is a flag that indicates signed arithmetic overflow.
-       It becomes 1 when the result of adding two signed 8-bit numbers
-       cannot be represented in 8 bits. This happens when:
-       - adding two positive numbers gives a negative result, or
-       - adding two negative numbers gives a positive result.
-    */
     assign overflow = overflow_reg;
     assign zero     = (result_reg == 8'b0);
     assign negative = result_reg[7];
