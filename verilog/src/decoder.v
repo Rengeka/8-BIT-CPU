@@ -152,15 +152,16 @@ module decoder(
             // NOT
             8'b0000101: ;
 
+            // MULTIPLY
+            8'b0000110: /*N/A*/;
+
+            // DIVIDE
+            8'b0000111: /*N/A*/;
+
             // STACK
 
-            /*4'b0001: begin                                                     
-               
-            end*/
-
-            //4'b0010: result_reg = bitwise_and_res;                             
+            // PUSH
+            8'b0001000: ;                            
         endcase
     end
-
-
 endmodule

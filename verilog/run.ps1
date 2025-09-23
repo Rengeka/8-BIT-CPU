@@ -3,7 +3,11 @@ if (!(Test-Path build)) { New-Item -ItemType Directory -Path build | Out-Null }
 iverilog -o build/alu_register.vvp `
     src/register_file.v `
     src/alu.v `
-    tbs/alu_register_file_tb.v 
+    src/ram_emu.v `
+    src/decoder.v `
+    src/program_counter.v `
+    src/cpu.v `
+    tbs/cpu_tb.v
 
 vvp build/alu_register.vvp
 
