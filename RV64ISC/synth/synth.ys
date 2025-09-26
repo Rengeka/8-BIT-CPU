@@ -1,0 +1,16 @@
+# Loading RTL
+read_verilog ../src/kernel/alu/base_alu.v
+read_verilog ../src/kernel/alu/alu.v
+
+# Set top module
+hierarchy -top alu
+
+# Synthesis
+proc; opt; fsm; opt; techmap; opt
+
+# Save netlist
+write_json alu.json
+write_verilog alu_netlist.v
+
+# Show result
+show -format png -prefix alu
